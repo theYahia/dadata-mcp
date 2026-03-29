@@ -3,7 +3,7 @@
 /**
  * @metarebalance/dadata-mcp — MCP server for DaData.ru API
  *
- * Full coverage of DaData API: 30 tools, 2 resources, 2 prompts.
+ * Full coverage of DaData API: 31 tools, 2 resources, 2 prompts.
  * Addresses, companies, banks, FIO, phones, email, passports,
  * vehicles, logistics, and 9 reference directories.
  *
@@ -66,7 +66,7 @@ const server = new McpServer({
 // Core tools (14)
 registerSuggestTools(server);       // suggest_address, suggest_company, suggest_fio
 registerFindTools(server);          // find_company_by_id, find_bank, find_by_id_address, find_delivery_city
-registerCleanTools(server);         // clean_address, clean_phone, clean_email, clean_name
+registerCleanTools(server);         // clean_address, clean_phone, clean_email, clean_name, clean_person
 registerGeoTools(server);           // geolocate_address, ip_locate
 registerProfileTools(server);       // get_balance, get_versions
 
@@ -102,5 +102,5 @@ const transport = new StdioServerTransport();
 await server.connect(transport);
 
 console.error(
-  "[dadata-mcp] Server started — 30 tools, 2 resources, 2 prompts ready.",
+  "[dadata-mcp] Server started — 31 tools, 2 resources, 2 prompts ready.",
 );

@@ -10,7 +10,7 @@
 
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { callCleaner } from "../client.js";
+import { callCleaner, getApiKey, getSecretKey } from "../client.js";
 import {
   success,
   error,
@@ -216,6 +216,98 @@ export function registerCleanTools(server: McpServer): void {
         quality: QC_ADDRESS[r.qc] ?? `Unknown (qc=${r.qc})`,
         confidence: qcToConfidence(r.qc),
       });
+    },
+  );
+
+  // --- clean_person ---
+  server.tool(
+    "clean_person",
+    "Validate a full person record in one request: FIO + birthdate + address + phone + email + passport. 5-8x cheaper than separate calls. Paid.",
+    {
+      name: z.string().optional().describe("Full name (FIO), e.g. 'Федотов Алексей'"),
+      birthdate: z.string().optional().describe("Date of birth, e.g. '12.03.1990'"),
+      address: z.string().optional().describe("Address in any format"),
+      phone: z.string().optional().describe("Phone number in any format"),
+      email: z.string().optional().describe("Email address"),
+      passport: z.string().optional().describe("Passport series and number, e.g. '45 04 346825'"),
+    },
+    async (params) => {
+      // Build structure and data arrays dynamically based on provided fields
+      const structure: string[] = [];
+      const data: string[] = [];
+
+      if (params.name) { structure.push("NAME"); data.push(params.name); }
+      if (params.birthdate) { structure.push("BIRTHDATE"); data.push(params.birthdate); }
+      if (params.address) { structure.push("ADDRESS"); data.push(params.address); }
+      if (params.phone) { structure.push("PHONE"); data.push(params.phone); }
+      if (params.email) { structure.push("EMAIL"); data.push(params.email); }
+      if (params.passport) { structure.push("PASSPORT"); data.push(params.passport); }
+
+      if (structure.length === 0) {
+        return error("At least one field must be provided (name, birthdate, address, phone, email, or passport).");
+      }
+
+      const secretKey = getSecretKey();
+      if (!secretKey) {
+        return error(
+          "DADATA_SECRET_KEY is required for clean_person. " +
+          "Add it to your MCP client env config. Get it at https://dadata.ru/profile/#info",
+        );
+      }
+
+      // Composite clean endpoint uses a special body format
+      let apiKey: string;
+      try {
+        apiKey = getApiKey();
+      } catch {
+        return error("DADATA_API_KEY is not set.");
+      }
+
+      const body = {
+        structure,
+        data: [data],
+      };
+
+      try {
+        const response = await fetch("https://cleaner.dadata.ru/api/v1/clean", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": `Token ${apiKey}`,
+            "X-Secret": secretKey,
+          },
+          body: JSON.stringify(body),
+        });
+
+        if (!response.ok) {
+          const statusMessages: Record<number, string> = {
+            401: "Authentication failed. Check DADATA_API_KEY.",
+            402: "Insufficient balance.",
+            403: "Access forbidden. Check DADATA_SECRET_KEY.",
+            429: "Rate limit exceeded. Wait before retrying.",
+          };
+          return error(statusMessages[response.status] ?? `DaData API error (HTTP ${response.status}).`);
+        }
+
+        const result = await response.json() as { structure: string[]; data: unknown[][] };
+
+        // Map structure names to results
+        const output: Record<string, unknown> = {};
+        const row = result.data?.[0] ?? [];
+        for (let i = 0; i < structure.length; i++) {
+          output[structure[i].toLowerCase()] = row[i] ?? null;
+        }
+
+        return success({
+          fields_checked: structure.length,
+          structure: structure,
+          results: output,
+        });
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Unknown error";
+        return error(`Network error: ${message}`);
+      }
     },
   );
 }
