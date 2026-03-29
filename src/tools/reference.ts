@@ -25,6 +25,9 @@ const DIRECTORIES = {
   region_court: { endpoint: "suggest/region_court", description: "Courts of Russia" },
   currency: { endpoint: "suggest/currency", description: "Currencies (ISO 4217)" },
   mktu: { endpoint: "suggest/mktu", description: "MKTU — trademark goods/services classes" },
+  okpdtr_profession: { endpoint: "suggest/okpdtr", description: "OKPDTR — worker professions directory" },
+  okpdtr_position: { endpoint: "suggest/okpdtr", description: "OKPDTR — employee positions directory" },
+  medical_position: { endpoint: "suggest/okpdtr", description: "Medical worker positions directory" },
 } as const;
 
 type DirectoryKey = keyof typeof DIRECTORIES;
@@ -32,12 +35,12 @@ type DirectoryKey = keyof typeof DIRECTORIES;
 export function registerReferenceTools(server: McpServer): void {
   server.tool(
     "lookup_reference",
-    "Search Russian reference directories: OKVED, OKPD, OKTMO, metro stations, tax/customs offices, courts, currencies, MKTU.",
+    "Search Russian reference directories: OKVED, OKPD, OKTMO, metro, tax/customs offices, courts, currencies, MKTU, professions, positions.",
     {
       directory: z
         .enum(Object.keys(DIRECTORIES) as [DirectoryKey, ...DirectoryKey[]])
         .describe(
-          "Directory to search: okved2, okpd2, oktmo, metro, fns_unit, fts_unit, region_court, currency, mktu",
+          "Directory to search: okved2, okpd2, oktmo, metro, fns_unit, fts_unit, region_court, currency, mktu, okpdtr_profession, okpdtr_position, medical_position",
         ),
       query: z
         .string()

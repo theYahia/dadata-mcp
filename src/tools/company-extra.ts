@@ -148,4 +148,78 @@ export function registerCompanyExtraTools(server: McpServer): void {
       return success(formatCompany(resp.suggestions[0].data));
     },
   );
+
+  // --- suggest_company_by (Belarus) ---
+  server.tool(
+    "suggest_company_by",
+    "Search Belarusian companies and entrepreneurs by name or UNP (Belarus tax ID).",
+    {
+      query: z
+        .string()
+        .min(1)
+        .max(300)
+        .describe("Company name or UNP (Belarus)"),
+      count: z.number().int().min(1).max(20).default(5),
+    },
+    async (params) => {
+      const result = await callSuggestions("suggest/party_by", {
+        query: params.query,
+        count: params.count,
+      });
+      if (result.error) return error(result.error);
+
+      const resp = result.data as SuggestResponse<PartyData>;
+      if (!resp.suggestions?.length) {
+        return success({
+          status: "no_results",
+          message: `No Belarusian companies found for "${params.query}".`,
+        });
+      }
+
+      return success({
+        count: resp.suggestions.length,
+        companies: resp.suggestions.map((s) => ({
+          name: s.value,
+          data: s.data,
+        })),
+      });
+    },
+  );
+
+  // --- suggest_company_kz (Kazakhstan) ---
+  server.tool(
+    "suggest_company_kz",
+    "Search Kazakh companies and entrepreneurs by name or BIN (Kazakhstan business ID).",
+    {
+      query: z
+        .string()
+        .min(1)
+        .max(300)
+        .describe("Company name or BIN (Kazakhstan)"),
+      count: z.number().int().min(1).max(20).default(5),
+    },
+    async (params) => {
+      const result = await callSuggestions("suggest/party_kz", {
+        query: params.query,
+        count: params.count,
+      });
+      if (result.error) return error(result.error);
+
+      const resp = result.data as SuggestResponse<PartyData>;
+      if (!resp.suggestions?.length) {
+        return success({
+          status: "no_results",
+          message: `No Kazakh companies found for "${params.query}".`,
+        });
+      }
+
+      return success({
+        count: resp.suggestions.length,
+        companies: resp.suggestions.map((s) => ({
+          name: s.value,
+          data: s.data,
+        })),
+      });
+    },
+  );
 }

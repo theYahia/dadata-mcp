@@ -1,10 +1,9 @@
 /**
- * Profile tools: get_balance.
+ * Profile tools: get_balance, get_versions.
  *
  * Uses the Profile API (GET requests, requires Token + Secret).
  */
 
-import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { callProfileAPI } from "../client.js";
 import { success, error } from "../lib/formatters.js";
@@ -27,6 +26,18 @@ export function registerProfileTools(server: McpServer): void {
         balance_rub: balance.balance,
         daily_stats: statResult.error ? "unavailable" : statResult.data,
       });
+    },
+  );
+
+  server.tool(
+    "get_versions",
+    "Check when DaData reference databases were last updated (FIAS, EGRUL, banks, etc.).",
+    {},
+    async () => {
+      const result = await callProfileAPI("version");
+      if (result.error) return error(result.error);
+
+      return success(result.data);
     },
   );
 }

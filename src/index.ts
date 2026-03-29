@@ -3,7 +3,7 @@
 /**
  * @metarebalance/dadata-mcp — MCP server for DaData.ru API
  *
- * Full coverage of DaData API: 27 tools, 2 resources, 2 prompts.
+ * Full coverage of DaData API: 30 tools, 2 resources, 2 prompts.
  * Addresses, companies, banks, FIO, phones, email, passports,
  * vehicles, logistics, and 9 reference directories.
  *
@@ -68,13 +68,13 @@ registerSuggestTools(server);       // suggest_address, suggest_company, suggest
 registerFindTools(server);          // find_company_by_id, find_bank, find_by_id_address, find_delivery_city
 registerCleanTools(server);         // clean_address, clean_phone, clean_email, clean_name
 registerGeoTools(server);           // geolocate_address, ip_locate
-registerProfileTools(server);       // get_balance
+registerProfileTools(server);       // get_balance, get_versions
 
 // Passport (3)
 registerPassportTools(server);      // clean_passport, find_fms_unit, find_inn_by_passport
 
-// Company extra (4)
-registerCompanyExtraTools(server);  // find_affiliated, find_company_by_email, find_brand, find_self_employed
+// Company extra (6)
+registerCompanyExtraTools(server);  // find_affiliated, find_company_by_email, find_brand, find_self_employed, suggest_company_by, suggest_company_kz
 
 // Email extra (1)
 registerEmailExtraTools(server);    // suggest_email
@@ -85,8 +85,8 @@ registerVehicleTools(server);       // clean_vehicle, suggest_car_brand
 // Postal & countries (2)
 registerPostalTools(server);        // find_postal_unit, suggest_country
 
-// Reference directories (1 tool covering 9 directories)
-registerReferenceTools(server);     // lookup_reference (okved2, okpd2, oktmo, metro, fns, fts, courts, currency, mktu)
+// Reference directories (1 tool covering 12 directories)
+registerReferenceTools(server);     // lookup_reference (okved2, okpd2, oktmo, metro, fns, fts, courts, currency, mktu, professions, positions, medical)
 
 // Resources (2)
 registerResources(server);          // quality-codes, capabilities
@@ -102,5 +102,5 @@ const transport = new StdioServerTransport();
 await server.connect(transport);
 
 console.error(
-  "[dadata-mcp] Server started — 27 tools, 2 resources, 2 prompts ready.",
+  "[dadata-mcp] Server started — 30 tools, 2 resources, 2 prompts ready.",
 );
