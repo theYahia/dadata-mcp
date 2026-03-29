@@ -69,14 +69,13 @@ Add to `.vscode/mcp.json`:
 
 ## Tools (31)
 
-### Addresses (4 tools)
+### Addresses (3 tools)
 
 | Tool | Cost | Description |
 |------|:----:|-------------|
 | `suggest_address` | Free | Autocomplete Russian addresses with postal code, FIAS ID, coordinates, timezone |
 | `clean_address` | 0.20 ₽ | Standardize address into 80+ structured fields with quality codes |
 | `find_by_id_address` | Free | Get full address info by FIAS ID, KLADR ID, or cadastral number |
-| `geolocate_address` | Free | Reverse geocoding: find nearest addresses by coordinates |
 
 ### Companies (8 tools)
 
