@@ -94,4 +94,48 @@ export function registerPassportTools(server: McpServer): void {
       });
     },
   );
+
+  // --- find_inn_by_passport ---
+  server.tool(
+    "find_inn_by_passport",
+    "Find a person's INN by passport data and birthday (via FNS API). Availability not guaranteed.",
+    {
+      surname: z.string().min(1).max(100).describe("Surname (фамилия)"),
+      name: z.string().min(1).max(100).describe("First name (имя)"),
+      patronymic: z.string().max(100).optional().describe("Patronymic (отчество)"),
+      birthdate: z.string().regex(/^\d{2}\.\d{2}\.\d{4}$/, "Format: DD.MM.YYYY").describe("Date of birth, DD.MM.YYYY"),
+      passport_series: z.string().min(4).max(5).describe("Passport series, e.g. '45 04'"),
+      passport_number: z.string().min(6).max(6).describe("Passport number, e.g. '346825'"),
+    },
+    async (params) => {
+      // This uses a special DaData endpoint that proxies to FNS
+      const body = {
+        source: {
+          surname: params.surname,
+          name: params.name,
+          patronymic: params.patronymic ?? "",
+          birthdate: params.birthdate,
+          passport_series: params.passport_series,
+          passport_number: params.passport_number,
+        },
+      };
+
+      const result = await callSuggestions("findById/party", body);
+      if (result.error) {
+        return error(
+          result.error +
+          " Note: this endpoint uses the FNS API which may be temporarily unavailable.",
+        );
+      }
+
+      if (!result.data) {
+        return success({
+          status: "not_found",
+          message: "INN not found. The FNS API may be temporarily unavailable.",
+        });
+      }
+
+      return success(result.data);
+    },
+  );
 }

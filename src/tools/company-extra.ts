@@ -118,4 +118,34 @@ export function registerCompanyExtraTools(server: McpServer): void {
       });
     },
   );
+
+  // --- find_self_employed ---
+  server.tool(
+    "find_self_employed",
+    "Check if an INN belongs to a self-employed person (via FNS API). Availability not guaranteed.",
+    {
+      query: z
+        .string()
+        .min(1)
+        .max(12)
+        .describe("INN of the person to check (12 digits)"),
+    },
+    async (params) => {
+      const result = await callSuggestions("findById/party", {
+        query: params.query,
+        type: "INDIVIDUAL",
+      });
+      if (result.error) return error(result.error);
+
+      const resp = result.data as SuggestResponse<PartyData>;
+      if (!resp.suggestions?.length) {
+        return success({
+          status: "not_found",
+          message: `No self-employed person found for INN "${params.query}". The FNS API may be unavailable.`,
+        });
+      }
+
+      return success(formatCompany(resp.suggestions[0].data));
+    },
+  );
 }
