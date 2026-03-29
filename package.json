@@ -1,6 +1,6 @@
 {
   "name": "@metarebalance/dadata-mcp",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Full-featured MCP server for DaData.ru — Russian address validation, company lookup, phone cleaning, geocoding for AI agents",
   "type": "module",
   "main": "dist/index.js",
