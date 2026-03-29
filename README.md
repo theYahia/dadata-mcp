@@ -1,28 +1,30 @@
 # @metarebalance/dadata-mcp
 
-Full-featured MCP server for [DaData.ru](https://dadata.ru) — Russian address validation, company lookup, phone cleaning, and geocoding for AI agents.
+MCP-сервер с полным покрытием API [DaData.ru](https://dadata.ru) — **31 инструмент**: адреса, компании, банки, телефоны, email, паспорта, автомобили, геокодирование и 12 справочников.
 
 [![npm](https://img.shields.io/npm/v/@metarebalance/dadata-mcp)](https://www.npmjs.com/package/@metarebalance/dadata-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Why this instead of official DaData MCP?
+> **[English version (README.en.md)](./README.en.md)**
 
-DaData offers an [official remote MCP server](https://mcp.dadata.ru/mcp) with 4 tools. This package provides **full local coverage**:
+## Почему этот, а не официальный MCP от DaData?
 
-| Feature | Official MCP | @metarebalance/dadata-mcp |
+У DaData есть [официальный MCP-сервер](https://mcp.dadata.ru/mcp) с 4 инструментами. Наш пакет покрывает **весь API**:
+
+| | Официальный MCP | @metarebalance/dadata-mcp |
 |---------|:-----------:|:---------------------:|
-| Tools | 4 | **8** |
-| Resources | 0 | **2** |
-| Prompts | 0 | **2** |
-| Transport | Remote (needs proxy) | **Local stdio** |
-| Free tools | 1 | **6** |
-| npm install | No | **Yes** |
+| Инструменты | 4 | **31** |
+| Ресурсы | 0 | **2** |
+| Промпты | 0 | **2** |
+| Транспорт | Удалённый | **Локальный stdio** |
+| Бесплатные | 1 | **23** |
+| npm-пакет | Нет | **Да** |
 
-## Quick Start
+## Быстрый старт
 
 ### Claude Desktop
 
-Add to your `claude_desktop_config.json`:
+Добавьте в `claude_desktop_config.json`:
 
 ```json
 {
@@ -31,8 +33,8 @@ Add to your `claude_desktop_config.json`:
       "command": "npx",
       "args": ["-y", "@metarebalance/dadata-mcp"],
       "env": {
-        "DADATA_API_KEY": "your-api-key",
-        "DADATA_SECRET_KEY": "your-secret-key"
+        "DADATA_API_KEY": "ваш-api-ключ",
+        "DADATA_SECRET_KEY": "ваш-секретный-ключ"
       }
     }
   }
@@ -47,7 +49,7 @@ claude mcp add dadata -- npx -y @metarebalance/dadata-mcp
 
 ### VS Code / Cursor
 
-Add to `.vscode/mcp.json`:
+Добавьте в `.vscode/mcp.json`:
 
 ```json
 {
@@ -56,79 +58,170 @@ Add to `.vscode/mcp.json`:
       "command": "npx",
       "args": ["-y", "@metarebalance/dadata-mcp"],
       "env": {
-        "DADATA_API_KEY": "your-api-key",
-        "DADATA_SECRET_KEY": "your-secret-key"
+        "DADATA_API_KEY": "ваш-api-ключ",
+        "DADATA_SECRET_KEY": "ваш-секретный-ключ"
       }
     }
   }
 }
 ```
 
-## Tools
+## Инструменты (31)
 
-### Free (Suggestions API, 10K requests/day)
+### Адреса (4)
 
-| Tool | Description |
-|------|-------------|
-| `suggest_address` | Autocomplete Russian addresses with postal code, FIAS ID, coordinates |
-| `suggest_company` | Search companies by name, INN, or OGRN |
-| `find_company_by_id` | Get detailed company info by INN or OGRN |
-| `find_bank` | Find bank by BIC, SWIFT, INN, or name |
-| `geolocate_address` | Reverse geocoding: coordinates to nearest addresses |
-| `ip_locate` | Detect Russian city by IPv4 address |
+| Инструмент | Стоимость | Описание |
+|------------|:---------:|----------|
+| `suggest_address` | Бесплатно | Автодополнение адресов с индексом, ФИАС, координатами, часовым поясом |
+| `clean_address` | 0.20 ₽ | Стандартизация адреса в 80+ полей с кодами качества |
+| `find_by_id_address` | Бесплатно | Адрес по коду ФИАС, КЛАДР или кадастровому номеру |
+| `geolocate_address` | Бесплатно | Обратное геокодирование: адрес по координатам |
 
-### Paid (Cleaner API, 0.20 RUB/request)
+### Компании (8)
 
-| Tool | Description |
-|------|-------------|
-| `clean_address` | Standardize address with 80+ structured fields and quality codes |
-| `clean_phone` | Validate phone number: carrier, region, timezone, mobile/landline |
+| Инструмент | Стоимость | Описание |
+|------------|:---------:|----------|
+| `suggest_company` | Бесплатно | Поиск по названию, ИНН или ОГРН |
+| `find_company_by_id` | Бесплатно | Полная информация: руководитель, учредители, финансы, ОКВЭД |
+| `find_affiliated` | Бесплатно* | Аффилированные компании по ИНН. *Тариф «Максимальный» |
+| `find_company_by_email` | 7 ₽ | Компания по корпоративному email или домену |
+| `find_brand` | 7 ₽ | Бренд, сайт и логотип по ИНН |
+| `find_self_employed` | Бесплатно | Проверка самозанятого по ИНН (через ФНС) |
+| `suggest_company_by` | Бесплатно | Компании Беларуси по названию или УНП |
+| `suggest_company_kz` | Бесплатно | Компании Казахстана по названию или БИН |
 
-## Resources
+### Банки (1)
 
-- **quality-codes** — Reference for DaData quality codes (qc, qc_geo) and confidence levels
-- **capabilities** — What DaData API can do: free vs paid features, rate limits
+| Инструмент | Стоимость | Описание |
+|------------|:---------:|----------|
+| `find_bank` | Бесплатно | Поиск по БИК, SWIFT, ИНН, рег. номеру или названию |
 
-## Prompts
+### ФИО (2)
 
-- **check_counterparty** — Due diligence check on a Russian company by INN
-- **validate_address** — Multi-step address validation with quality assessment
+| Инструмент | Стоимость | Описание |
+|------------|:---------:|----------|
+| `suggest_fio` | Бесплатно | Автодополнение ФИО с определением пола |
+| `clean_name` | 0.20 ₽ | Разбор ФИО, определение пола, склонение по падежам |
 
-## Environment Variables
+### Контакты (3)
 
-| Variable | Required | Description |
-|----------|:--------:|-------------|
-| `DADATA_API_KEY` | Yes | API key from [dadata.ru/profile](https://dadata.ru/profile/#info) |
-| `DADATA_SECRET_KEY` | No | Secret key for paid clean tools. Without it, 6 free tools still work |
+| Инструмент | Стоимость | Описание |
+|------------|:---------:|----------|
+| `clean_phone` | 0.20 ₽ | Проверка телефона: оператор, регион, часовой пояс |
+| `clean_email` | 0.20 ₽ | Проверка email: исправление опечаток, одноразовый/корпоративный/личный |
+| `suggest_email` | Бесплатно | Автодополнение email с подсказкой доменов |
 
-## Example Prompts
+### Паспорта (3)
+
+| Инструмент | Стоимость | Описание |
+|------------|:---------:|----------|
+| `clean_passport` | 0.20 ₽ | Проверка по реестру недействительных паспортов МВД |
+| `find_fms_unit` | Бесплатно | Кем выдан паспорт по коду подразделения |
+| `find_inn_by_passport` | Бесплатно | ИНН по паспортным данным и дате рождения (через ФНС) |
+
+### Автомобили (2)
+
+| Инструмент | Стоимость | Описание |
+|------------|:---------:|----------|
+| `clean_vehicle` | 0.20 ₽ | Распознавание марки и модели из строки |
+| `suggest_car_brand` | Бесплатно | Автодополнение марок автомобилей |
+
+### Геолокация (2)
+
+| Инструмент | Стоимость | Описание |
+|------------|:---------:|----------|
+| `geolocate_address` | Бесплатно | Обратное геокодирование: адрес по координатам |
+| `ip_locate` | Бесплатно | Город по IP-адресу |
+
+### Почта и страны (2)
+
+| Инструмент | Стоимость | Описание |
+|------------|:---------:|----------|
+| `find_postal_unit` | Бесплатно | Почтовое отделение по индексу или координатам |
+| `suggest_country` | Бесплатно | Справочник стран (ISO 3166) |
+
+### Логистика (1)
+
+| Инструмент | Стоимость | Описание |
+|------------|:---------:|----------|
+| `find_delivery_city` | Бесплатно | ID города в СДЭК, Boxberry, DPD по коду КЛАДР |
+
+### Композитная проверка (1)
+
+| Инструмент | Стоимость | Описание |
+|------------|:---------:|----------|
+| `clean_person` | 0.20 ₽ | Проверка записи о человеке одним запросом: ФИО + адрес + телефон + email + паспорт. В 5-8 раз дешевле раздельных запросов |
+
+### Справочники (1 инструмент, 12 справочников)
+
+| Инструмент | Стоимость | Описание |
+|------------|:---------:|----------|
+| `lookup_reference` | Бесплатно | ОКВЭД 2, ОКПД 2, ОКТМО, станции метро, налоговые (ФНС), таможни (ФТС), суды, валюты (ISO 4217), МКТУ, профессии, должности, медицинские должности |
+
+### Личный кабинет (2)
+
+| Инструмент | Стоимость | Описание |
+|------------|:---------:|----------|
+| `get_balance` | Бесплатно | Баланс и статистика использования за день |
+| `get_versions` | Бесплатно | Даты обновления справочников |
+
+## Ресурсы
+
+- **`dadata://reference/quality-codes`** — Расшифровка кодов качества DaData (qc, qc_geo) и уровней достоверности
+- **`dadata://reference/capabilities`** — Возможности API: бесплатные/платные функции, лимиты
+
+## Промпты
+
+- **`check_counterparty`** — Проверка контрагента по ИНН: статус, руководитель, финансы, оценка риска
+- **`validate_address`** — Пошаговая валидация адреса с оценкой качества
+
+## Переменные окружения
+
+| Переменная | Обязательна | Описание |
+|------------|:----------:|----------|
+| `DADATA_API_KEY` | Да | API-ключ из [dadata.ru/profile](https://dadata.ru/profile/#info) |
+| `DADATA_SECRET_KEY` | Нет | Секретный ключ для платных инструментов (`clean_*`). Без него работают 23 бесплатных |
+
+## Примеры запросов
 
 ```
-Find company by INN 7707083893
+Найди компанию по ИНН 7707083893
 ```
 
 ```
-Standardize address: мск сухонская 11 кв 89
+Стандартизируй адрес: мск сухонская 11 кв 89
 ```
 
 ```
-What city is IP 46.226.227.20 from?
+Проверь контрагента с ИНН 7736207543 — компания действует?
 ```
 
 ```
-Find Sberbank's BIC and correspondent account
+Какой город у IP 46.226.227.20?
 ```
 
-## Security
+```
+Найди БИК и корсчёт Сбербанка
+```
 
-- API keys are never logged or included in error responses
-- All inputs validated with Zod schemas (length limits, type checks, regex for IPs)
-- Path traversal protection on all API endpoint construction
-- 10-second hard timeout on all HTTP requests
-- Retry with exponential backoff on transient errors only (429, 5xx)
-- `stdout` reserved for JSON-RPC — all logs go to `stderr`
+```
+Проверь паспорт 4510 235857 — есть в реестре недействительных?
+```
 
-## Development
+```
+Найди ОКВЭД для «разработка программного обеспечения»
+```
+
+## Безопасность
+
+- API-ключи никогда не логируются и не попадают в ответы об ошибках
+- Все входные данные валидируются через Zod-схемы
+- Защита от path traversal при построении эндпоинтов
+- Жёсткий таймаут 10 секунд на все HTTP-запросы
+- Повторные попытки с экспоненциальным backoff только на временные ошибки (429, 5xx)
+- `stdout` зарезервирован для JSON-RPC — логи идут в `stderr`
+
+## Разработка
 
 ```bash
 git clone https://github.com/theYahia/dadata-mcp.git
@@ -138,14 +231,14 @@ npm run build
 npm test
 ```
 
-### Test with MCP Inspector
+### Тест через MCP Inspector
 
 ```bash
 DADATA_API_KEY=your-key npx @modelcontextprotocol/inspector node dist/index.js
 ```
 
-Opens an interactive UI at `http://localhost:6274` where you can call each tool and see JSON-RPC messages.
+Откроется интерактивный UI на `http://localhost:6274` для вызова инструментов и просмотра JSON-RPC сообщений.
 
-## License
+## Лицензия
 
 MIT
