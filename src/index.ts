@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
 /**
- * @neuraldeep/dadata-mcp — MCP server for DaData.ru API
+ * @metarebalance/dadata-mcp — MCP server for DaData.ru API
  *
- * Provides 14 tools, 2 resources, and 2 prompts for Russian address/company/bank
- * validation, FIO parsing, phone/email cleaning, geocoding, and logistics.
+ * Full coverage of DaData API: 25 tools, 2 resources, 2 prompts.
+ * Addresses, companies, banks, FIO, phones, email, passports,
+ * vehicles, logistics, and 9 reference directories.
  *
  * Security:
  *   - stdout is reserved for JSON-RPC — all logs go to stderr
@@ -21,6 +22,12 @@ import { registerFindTools } from "./tools/find.js";
 import { registerCleanTools } from "./tools/clean.js";
 import { registerGeoTools } from "./tools/geo.js";
 import { registerProfileTools } from "./tools/profile.js";
+import { registerPassportTools } from "./tools/passport.js";
+import { registerCompanyExtraTools } from "./tools/company-extra.js";
+import { registerEmailExtraTools } from "./tools/email-extra.js";
+import { registerVehicleTools } from "./tools/vehicle.js";
+import { registerPostalTools } from "./tools/postal.js";
+import { registerReferenceTools } from "./tools/reference.js";
 import { registerResources } from "./resources/reference.js";
 import { registerPrompts } from "./prompts/workflows.js";
 
@@ -56,18 +63,36 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
-// Tools (14 total)
-registerSuggestTools(server);   // suggest_address, suggest_company, suggest_fio
-registerFindTools(server);      // find_company_by_id, find_bank, find_by_id_address, find_delivery_city
-registerCleanTools(server);     // clean_address, clean_phone, clean_email, clean_name
-registerGeoTools(server);       // geolocate_address, ip_locate
-registerProfileTools(server);   // get_balance
+// Core tools (14)
+registerSuggestTools(server);       // suggest_address, suggest_company, suggest_fio
+registerFindTools(server);          // find_company_by_id, find_bank, find_by_id_address, find_delivery_city
+registerCleanTools(server);         // clean_address, clean_phone, clean_email, clean_name
+registerGeoTools(server);           // geolocate_address, ip_locate
+registerProfileTools(server);       // get_balance
+
+// Passport (2)
+registerPassportTools(server);      // clean_passport, find_fms_unit
+
+// Company extra (3)
+registerCompanyExtraTools(server);  // find_affiliated, find_company_by_email, find_brand
+
+// Email extra (1)
+registerEmailExtraTools(server);    // suggest_email
+
+// Vehicle (2)
+registerVehicleTools(server);       // clean_vehicle, suggest_car_brand
+
+// Postal & countries (2)
+registerPostalTools(server);        // find_postal_unit, suggest_country
+
+// Reference directories (1 tool covering 9 directories)
+registerReferenceTools(server);     // lookup_reference (okved2, okpd2, oktmo, metro, fns, fts, courts, currency, mktu)
 
 // Resources (2)
-registerResources(server);      // quality-codes, capabilities
+registerResources(server);          // quality-codes, capabilities
 
 // Prompts (2)
-registerPrompts(server);        // check_counterparty, validate_address
+registerPrompts(server);            // check_counterparty, validate_address
 
 // ---------------------------------------------------------------------------
 // Start
@@ -77,5 +102,5 @@ const transport = new StdioServerTransport();
 await server.connect(transport);
 
 console.error(
-  "[dadata-mcp] Server started — 14 tools, 2 resources, 2 prompts ready.",
+  "[dadata-mcp] Server started — 25 tools, 2 resources, 2 prompts ready.",
 );

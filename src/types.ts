@@ -229,6 +229,121 @@ export interface DeliveryData {
 }
 
 // ---------------------------------------------------------------------------
+// Clean passport
+// ---------------------------------------------------------------------------
+
+export interface CleanPassportResult {
+  source: string;
+  series: string | null;
+  number: string | null;
+  qc: number;
+}
+
+// ---------------------------------------------------------------------------
+// FMS unit (passport issuer)
+// ---------------------------------------------------------------------------
+
+export interface FmsUnitData {
+  code: string | null;
+  name: string | null;
+  region_code: string | null;
+  type: string | null;
+}
+
+// ---------------------------------------------------------------------------
+// Country
+// ---------------------------------------------------------------------------
+
+export interface CountryData {
+  code: string | null;
+  alfa2: string | null;
+  alfa3: string | null;
+  name_short: string | null;
+  name: string | null;
+}
+
+// ---------------------------------------------------------------------------
+// Email suggestion data
+// ---------------------------------------------------------------------------
+
+export interface EmailData {
+  local: string | null;
+  domain: string | null;
+  type: string | null;
+  source: string | null;
+  qc: number | null;
+}
+
+// ---------------------------------------------------------------------------
+// Postal unit
+// ---------------------------------------------------------------------------
+
+export interface PostalUnitData {
+  postal_code: string | null;
+  is_closed: boolean | null;
+  type_code: string | null;
+  address_str: string | null;
+  address_kladr_id: string | null;
+  schedule_mon: string | null;
+  schedule_tue: string | null;
+  schedule_wed: string | null;
+  schedule_thu: string | null;
+  schedule_fri: string | null;
+  schedule_sat: string | null;
+  schedule_sun: string | null;
+  geo_lat: number | null;
+  geo_lon: number | null;
+}
+
+// ---------------------------------------------------------------------------
+// Car brand
+// ---------------------------------------------------------------------------
+
+export interface CarBrandData {
+  id: string | null;
+  name: string | null;
+  name_ru: string | null;
+}
+
+// ---------------------------------------------------------------------------
+// Reference data (OKVED, OKPD, currency, metro, fns, fts, court, etc.)
+// ---------------------------------------------------------------------------
+
+export interface ReferenceData {
+  [key: string]: unknown;
+}
+
+// ---------------------------------------------------------------------------
+// Affiliated party
+// ---------------------------------------------------------------------------
+
+export interface AffiliatedPartyData extends PartyData {
+  // Same as PartyData with additional affiliation context
+}
+
+// ---------------------------------------------------------------------------
+// Brand data
+// ---------------------------------------------------------------------------
+
+export interface BrandData {
+  name: string | null;
+  site: string | null;
+  logo: string | null;
+}
+
+// ---------------------------------------------------------------------------
+// Clean vehicle
+// ---------------------------------------------------------------------------
+
+export interface CleanVehicleResult {
+  source: string;
+  result: string | null;
+  brand: string | null;
+  model: string | null;
+  qc: number;
+}
+
+// ---------------------------------------------------------------------------
 // Profile / Balance
 // ---------------------------------------------------------------------------
 
