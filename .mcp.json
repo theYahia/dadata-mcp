@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "dadata": {
+      "command": "npx",
+      "args": ["-y", "@metarebalance/dadata-mcp"],
+      "env": {
+        "DADATA_API_KEY": "<YOUR_TOKEN>",
+        "DADATA_SECRET_KEY": "<YOUR_SECRET>"
+      }
+    }
+  }
+}
