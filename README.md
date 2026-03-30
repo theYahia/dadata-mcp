@@ -1,6 +1,6 @@
 # @metarebalance/dadata-mcp
 
-MCP-сервер с полным покрытием API [DaData.ru](https://dadata.ru) — **31 инструмент**: адреса, компании, банки, телефоны, email, паспорта, автомобили, геокодирование и 12 справочников.
+> **31 инструмент вместо ~4 у [официального DaData MCP](https://dadata.ru/mcp/).** Полное покрытие DaData API — адреса, компании, банки, телефоны, email, паспорта, автомобили, геокодирование и 12 справочников. Локальная установка через `npx`, без внешнего хостинга. Часть серии [Russian API MCP](https://github.com/theYahia/russian-mcp) (50 серверов) by [@theYahia](https://github.com/theYahia).
 
 [![npm](https://img.shields.io/npm/v/@metarebalance/dadata-mcp)](https://www.npmjs.com/package/@metarebalance/dadata-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -54,6 +54,25 @@ claude mcp add dadata -- npx -y @metarebalance/dadata-mcp
 ```json
 {
   "servers": {
+    "dadata": {
+      "command": "npx",
+      "args": ["-y", "@metarebalance/dadata-mcp"],
+      "env": {
+        "DADATA_API_KEY": "ваш-api-ключ",
+        "DADATA_SECRET_KEY": "ваш-секретный-ключ"
+      }
+    }
+  }
+}
+```
+
+### Windsurf
+
+Добавьте в настройки MCP Toolkit:
+
+```json
+{
+  "mcpServers": {
     "dadata": {
       "command": "npx",
       "args": ["-y", "@metarebalance/dadata-mcp"],
@@ -237,6 +256,23 @@ DADATA_API_KEY=your-key npx @modelcontextprotocol/inspector node dist/index.js
 ```
 
 Откроется интерактивный UI на `http://localhost:6274` для вызова инструментов и просмотра JSON-RPC сообщений.
+
+## Часть серии Russian API MCP
+
+Этот сервер — часть открытой серии MCP-серверов для российских API:
+
+| MCP | Статус | Описание |
+|-----|--------|----------|
+| [@metarebalance/dadata-mcp](https://github.com/theYahia/dadata-mcp) | ✅ готов | Адреса, компании, банки, телефоны |
+| @theyahia/cbr-mcp | 📅 скоро | Курсы валют, ключевая ставка |
+| @theyahia/yookassa-mcp | 📅 скоро | Платежи, возвраты, чеки 54-ФЗ |
+| @theyahia/moysklad-mcp | 📅 скоро | Склад, заказы, контрагенты |
+| @theyahia/cdek-mcp | 📅 скоро | Расчёт, создание, трекинг |
+| @theyahia/ozon-mcp | 📅 скоро | Товары, цены, аналитика |
+| @theyahia/amocrm-mcp | 📅 скоро | Сделки, контакты, воронки |
+| ... | 📅 | **+43 сервера** — полный список на витрине |
+
+**50 MCP-серверов для российских API:** [github.com/theYahia/russian-mcp](https://github.com/theYahia/russian-mcp)
 
 ## Лицензия
 
