@@ -197,7 +197,7 @@ claude mcp add dadata -- npx -y @metarebalance/dadata-mcp
 
 | Переменная | Обязательна | Описание |
 |------------|:----------:|----------|
-| `DADATA_API_KEY` | Да | API-ключ из [dadata.ru/profile](https://dadata.ru/profile/#info) |
+| `DADATA_API_KEY` | Да | API-ключ — [зарегистрируйтесь бесплатно](https://dadata.ru/?ref=255717) и получите в [личном кабинете](https://dadata.ru/profile/#info) |
 | `DADATA_SECRET_KEY` | Нет | Секретный ключ для платных инструментов (`clean_*`). Без него работают 23 бесплатных |
 
 ## Тарифы и лимиты
