@@ -1,6 +1,6 @@
 # @metarebalance/dadata-mcp
 
-> **31 инструмент вместо ~4 у [официального DaData MCP](https://dadata.ru/mcp/).** Полное покрытие DaData API — адреса, компании, банки, телефоны, email, паспорта, автомобили, геокодирование и 12 справочников. Локальная установка через `npx`, без внешнего хостинга. Часть серии [Russian API MCP](https://github.com/theYahia/russian-mcp) (50 серверов) by [@theYahia](https://github.com/theYahia).
+> **31 инструмент вместо ~4 у [официального DaData MCP](https://dadata.ru/mcp/).** Полное покрытие DaData API — адреса, компании, банки, телефоны, email, паспорта, автомобили, геокодирование и 12 справочников. Локальная установка через `npx`, без внешнего хостинга. Часть серии [Russian API MCP](https://github.com/theYahia/russian-mcp) (47 серверов) by [@theYahia](https://github.com/theYahia).
 
 [![npm](https://img.shields.io/npm/v/@metarebalance/dadata-mcp)](https://www.npmjs.com/package/@metarebalance/dadata-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -100,8 +100,8 @@ claude mcp add dadata -- npx -y @metarebalance/dadata-mcp
 | Инструмент | Стоимость | Описание |
 |------------|:---------:|----------|
 | `suggest_company` | Бесплатно | Поиск по названию, ИНН или ОГРН |
-| `find_company_by_id` | Бесплатно | Полная информация: руководитель, учредители, финансы, ОКВЭД |
-| `find_affiliated` | Бесплатно* | Аффилированные компании по ИНН. *Тариф «Максимальный» |
+| `find_company_by_id` | Бесплатно | Информация о компании по ИНН. Базовые данные бесплатно; **финансы и все коды ОКВЭД** — только тариф [«Максимальный»](https://dadata.ru/pricing/?product=suggestions) |
+| `find_affiliated` | **Максимальный** | Аффилированные компании по ИНН. **Не работает на бесплатном тарифе** |
 | `find_company_by_email` | 7 ₽ | Компания по корпоративному email или домену |
 | `find_brand` | 7 ₽ | Бренд, сайт и логотип по ИНН |
 | `find_self_employed` | Бесплатно | Проверка самозанятого по ИНН (через ФНС) |
@@ -199,6 +199,16 @@ claude mcp add dadata -- npx -y @metarebalance/dadata-mcp
 |------------|:----------:|----------|
 | `DADATA_API_KEY` | Да | API-ключ из [dadata.ru/profile](https://dadata.ru/profile/#info) |
 | `DADATA_SECRET_KEY` | Нет | Секретный ключ для платных инструментов (`clean_*`). Без него работают 23 бесплатных |
+
+## Тарифы и лимиты
+
+> Подробнее: [dadata.ru/pricing](https://dadata.ru/pricing/?product=suggestions)
+
+- **Бесплатный тариф:** до **10 000 запросов в сутки**. Достаточно для разработки и небольших проектов.
+- **Тариф «Максимальный»** необходим для:
+  - `find_affiliated` — поиск аффилированных компаний (**не работает** на бесплатном тарифе)
+  - `find_company_by_id` — полные данные (финансы, все коды ОКВЭД приходят **только** на «Максимальном»; базовая информация доступна бесплатно)
+- Платные инструменты (`clean_*`) — от 0.20 ₽ за запрос, требуют `DADATA_SECRET_KEY`
 
 ## Примеры запросов
 
