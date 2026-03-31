@@ -57,5 +57,6 @@
   "bugs": {
     "url": "https://github.com/theYahia/dadata-mcp/issues"
   },
-  "author": "metarebalance"
+  "author": "metarebalance",
+  "mcpName": "io.github.theYahia/dadata-mcp"
 }
