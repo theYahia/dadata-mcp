@@ -1,7 +1,7 @@
 {
-  "name": "@metarebalance/dadata-mcp",
-  "version": "1.0.4",
-  "description": "Full-featured MCP server for DaData.ru — Russian address validation, company lookup, phone cleaning, geocoding for AI agents",
+  "name": "@theyahia/dadata-mcp",
+  "version": "1.0.7",
+  "description": "MCP server for DaData — address validation, company lookup, geocoding (Russia)",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -46,7 +46,11 @@
     "claude",
     "company",
     "inn",
-    "validation"
+    "validation",
+    "api",
+    "typescript",
+    "russian-api",
+    "data"
   ],
   "license": "MIT",
   "repository": {
