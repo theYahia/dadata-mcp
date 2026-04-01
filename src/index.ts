@@ -14,8 +14,11 @@
  *   - Hard timeout (10s) on all API requests
  */
 
+import { createServer } from "node:http";
+import { randomUUID } from "node:crypto";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 
 import { registerSuggestTools } from "./tools/suggest.js";
 import { registerFindTools } from "./tools/find.js";
@@ -95,12 +98,56 @@ registerResources(server);          // quality-codes, capabilities
 registerPrompts(server);            // check_counterparty, validate_address
 
 // ---------------------------------------------------------------------------
-// Start
+// Start — stdio (default) or Streamable HTTP (--http or HTTP_PORT env)
 // ---------------------------------------------------------------------------
 
-const transport = new StdioServerTransport();
-await server.connect(transport);
+const useHttp = process.argv.includes("--http") || process.env.HTTP_PORT;
 
-console.error(
-  "[dadata-mcp] Server started — 31 tools, 2 resources, 2 prompts ready.",
-);
+if (useHttp) {
+  const port = parseInt(process.env.HTTP_PORT || "3000", 10);
+
+  const httpTransport = new StreamableHTTPServerTransport({
+    sessionIdGenerator: () => randomUUID(),
+  });
+
+  const httpServer = createServer((req, res) => {
+    // CORS
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, mcp-session-id");
+
+    if (req.method === "OPTIONS") {
+      res.writeHead(204);
+      res.end();
+      return;
+    }
+
+    if (req.url === "/mcp") {
+      httpTransport.handleRequest(req, res);
+    } else if (req.url === "/health") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ status: "ok", tools: 31, transport: "streamable-http" }));
+    } else {
+      res.writeHead(404);
+      res.end("Not found. Use /mcp for MCP protocol or /health for status.");
+    }
+  });
+
+  await server.connect(httpTransport);
+
+  httpServer.listen(port, () => {
+    console.error(
+      `[dadata-mcp] Streamable HTTP server running on http://localhost:${port}/mcp`,
+    );
+    console.error(
+      `[dadata-mcp] Health check: http://localhost:${port}/health`,
+    );
+  });
+} else {
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+
+  console.error(
+    "[dadata-mcp] Server started (stdio) — 31 tools, 2 resources, 2 prompts ready.",
+  );
+}
